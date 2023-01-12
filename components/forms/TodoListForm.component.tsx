@@ -4,36 +4,30 @@ import classNames from "classnames";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler } from "react-hook-form";
 
-export type TodoItemFormValues = {
+export type TodoListFormValues = {
     title: string;
-    description: string;
-    date: Date;
 };
 
-type TodoItemProps = {
+type TodoListProps = {
     formTitle: string;
     inputPlaceholder: string;
-    descriptionPlaceholder: string;
-    onSubmit: SubmitHandler<TodoItemFormValues>;
+    onSubmit: SubmitHandler<TodoListFormValues>;
 };
 
 const formSchema = z.object({
-    title: z.string().min(1, { message: "Item title is required" }),
-    description: z.string().min(1, { message: "Item description is required" }),
-    date: z.coerce.date(),
+    title: z.string().min(1, { message: "Form title is required" }),
 });
 
-export const TodoItemForm = ({
+export const TodoListForm = ({
     formTitle,
     inputPlaceholder,
-    descriptionPlaceholder,
     onSubmit,
-}: TodoItemProps) => {
+}: TodoListProps) => {
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<TodoItemFormValues>({
+    } = useForm<TodoListFormValues>({
         resolver: zodResolver(formSchema),
     });
 
@@ -52,23 +46,6 @@ export const TodoItemForm = ({
                     placeholder={inputPlaceholder}
                     className="input input-bordered w-full max-w-xs"
                 />
-                {errors.description?.message && (
-                    <p>{errors.description?.message}</p>
-                )}
-                <textarea
-                    {...register("description")}
-                    rows={5}
-                    className="textarea textarea-bordered"
-                    placeholder={descriptionPlaceholder}
-                ></textarea>
-
-                {errors.date?.message && <p>{errors.date?.message}</p>}
-                <input
-                    {...register("date")}
-                    type="datetime-local"
-                    className="input input-bordered"
-                />
-
                 <input type="submit" value="Save" />
             </form>
         </div>

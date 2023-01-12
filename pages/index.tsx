@@ -1,11 +1,21 @@
 import Head from "next/head";
 
 import { Modal } from "../components/common/Modal.component";
-import { TodoItemForm } from "../components/forms/TodoItemForm.component";
-import { TodoItemFormValues } from "../components/forms/TodoItemForm.component";
+import {
+    TodoItemForm,
+    TodoItemFormValues,
+} from "../components/forms/TodoItemForm.component";
+import {
+    TodoListForm,
+    TodoListFormValues,
+} from "../components/forms/TodoListForm.component";
 
 export default function Home() {
     const onTodoItemFormSubmit = (data: TodoItemFormValues) => {
+        console.log(data);
+    };
+
+    const onTodoListFormSubmit = (data: TodoListFormValues) => {
         console.log(data);
     };
 
@@ -30,6 +40,13 @@ export default function Home() {
                         inputPlaceholder="Type title..."
                         descriptionPlaceholder="Type description..."
                         onSubmit={onTodoItemFormSubmit}
+                    />
+                </Modal>
+                <Modal id="modal2" label="Open ToDo List Modal">
+                    <TodoListForm
+                        formTitle="New Todo List"
+                        inputPlaceholder="Type title..."
+                        onSubmit={onTodoListFormSubmit}
                     />
                 </Modal>
             </main>
