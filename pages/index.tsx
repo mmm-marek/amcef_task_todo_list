@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { createNewTodoList, createNewTodoItem } from "../api/todoApi";
 
 import { Modal } from "../components/common/Modal.component";
 import {
@@ -12,11 +13,11 @@ import {
 
 export default function Home() {
     const onTodoItemFormSubmit = (data: TodoItemFormValues) => {
-        console.log(data);
+        createNewTodoItem({ ...data, isFinished: true }, "1");
     };
 
     const onTodoListFormSubmit = (data: TodoListFormValues) => {
-        console.log(data);
+        createNewTodoList(data);
     };
 
     return (
