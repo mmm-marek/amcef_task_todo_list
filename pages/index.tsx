@@ -1,6 +1,14 @@
 import Head from "next/head";
 
+import { Modal } from "../components/common/Modal.component";
+import { TodoItemForm } from "../components/forms/TodoItemForm.component";
+import { TodoItemFormValues } from "../components/forms/TodoItemForm.component";
+
 export default function Home() {
+    const onTodoItemFormSubmit = (data: TodoItemFormValues) => {
+        console.log(data);
+    };
+
     return (
         <>
             <Head>
@@ -15,7 +23,16 @@ export default function Home() {
                 />
                 <link rel="icon" href="/amcef_fav.webp" />
             </Head>
-            <main className="w-screen h-screen bg-black"></main>
+            <main className="w-screen h-screen bg-black">
+                <Modal id="modal1" label="Open ToDo Item Modal">
+                    <TodoItemForm
+                        formTitle="New Todo Item"
+                        inputPlaceholder="Type title..."
+                        descriptionPlaceholder="Type description..."
+                        onSubmit={onTodoItemFormSubmit}
+                    />
+                </Modal>
+            </main>
         </>
     );
 }
