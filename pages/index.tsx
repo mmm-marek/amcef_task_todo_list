@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Image from "next/image";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
     createNewTodoList,
@@ -59,15 +60,25 @@ export default function Home() {
                 />
                 <link rel="icon" href="/amcef_fav.webp" />
             </Head>
-            <div className="w-screen h-screen bg-black">
+            <div className="flex justify-center items-center flex-col gap-2 w-screen h-screen bg-black">
+                <div>
+                    <Image
+                        src="./amcef-logo.svg"
+                        alt="logo"
+                        width={295}
+                        height={100}
+                    />
+                </div>
                 {isLoading && <div>Loading...</div>}
                 {isError && <div>Error occured</div>}
-                {data && (
-                    <TodoListStack
-                        todoLists={data}
-                        onDeleteList={handleDeleteTodoList}
-                    />
-                )}
+                <div className=" overflow-y-auto">
+                    {data && (
+                        <TodoListStack
+                            todoLists={data}
+                            onDeleteList={handleDeleteTodoList}
+                        />
+                    )}
+                </div>
                 {/* <Modal id="modal1" label="Open ToDo Item Modal">
                     <TodoItemForm
                         formTitle="New Todo Item"
@@ -76,7 +87,7 @@ export default function Home() {
                         onSubmit={onTodoItemFormSubmit}
                     />
                 </Modal> */}
-                <Modal id="modal2" label="Open ToDo List Modal">
+                <Modal id="modal2" label="Create New ToDo List">
                     <TodoListForm
                         formTitle="New Todo List"
                         inputPlaceholder="Type title..."

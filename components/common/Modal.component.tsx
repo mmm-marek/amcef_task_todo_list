@@ -9,7 +9,10 @@ type ModalProps = {
 export const Modal = ({ id, label, children }: ModalProps) => {
     return (
         <>
-            <label htmlFor={id} className="btn">
+            <label
+                htmlFor={id}
+                className="btn bg-amcef-primary hover:bg-amcef-primary-hover text-amcef-black"
+            >
                 {label}
             </label>
 
