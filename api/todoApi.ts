@@ -2,26 +2,30 @@ import axios from "axios";
 import { TodoListFormValues } from "../components/forms/TodoListForm.component";
 import { TodoItemFormValues } from "../components/forms/TodoItemForm.component";
 
-export const getTodoLists = async () => {
+export type TodoList = { id: string; title: string };
+
+export const getTodoLists = async (): Promise<TodoList[]> => {
     const res = await axios.get(
         "https://63beeddd585bedcb36bae16d.mockapi.io/api/todo-lists"
     );
-    return res;
+    return res.data;
 };
 
-export const createNewTodoList = async (data: TodoListFormValues) => {
+export const createNewTodoList = async (
+    data: TodoListFormValues
+): Promise<TodoList> => {
     const res = await axios.post(
         "https://63beeddd585bedcb36bae16d.mockapi.io/api/todo-lists",
         data
     );
-    return res;
+    return res.data;
 };
 
-export const deleteTodoList = async (todoListId: TodoListFormValues) => {
+export const deleteTodoList = async (todoListId: string): Promise<TodoList> => {
     const res = await axios.delete(
         `https://63beeddd585bedcb36bae16d.mockapi.io/api/todo-lists/${todoListId}`
     );
-    return res;
+    return res.data;
 };
 
 export const getTodoItemsForTodoList = async (todoListId: string) => {

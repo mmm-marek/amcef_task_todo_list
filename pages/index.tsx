@@ -1,25 +1,50 @@
 import Head from "next/head";
-import { createNewTodoList, createNewTodoItem } from "../api/todoApi";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+    createNewTodoList,
+    deleteTodoList,
+    getTodoLists,
+} from "../api/todoApi";
 
 import { Modal } from "../components/common/Modal.component";
-import {
-    TodoItemForm,
-    TodoItemFormValues,
-} from "../components/forms/TodoItemForm.component";
 import {
     TodoListForm,
     TodoListFormValues,
 } from "../components/forms/TodoListForm.component";
+import { TodoListStack } from "../components/stack/TodoListsStack.component";
 
 export default function Home() {
-    const onTodoItemFormSubmit = (data: TodoItemFormValues) => {
-        createNewTodoItem({ ...data, isFinished: true }, "1");
-    };
+    const queryClient = useQueryClient();
+    const { isLoading, isError, data } = useQuery("todoLists", getTodoLists);
+
+    const createTodoListMutation = useMutation({
+        mutationFn: createNewTodoList,
+        onSuccess: (newTodoList) => {
+            queryClient.setQueryData("todoLists", [
+                ...(data ? data : []),
+                newTodoList,
+            ]);
+        },
+    });
+
+    const deleteTodoListMutation = useMutation({
+        mutationFn: deleteTodoList,
+        onSuccess: (deletedTodoList) => {
+            queryClient.setQueryData("todoLists", [
+                ...(data ? data : []).filter(
+                    (value) => value.id !== deletedTodoList.id
+                ),
+            ]);
+        },
+    });
 
     const onTodoListFormSubmit = (data: TodoListFormValues) => {
-        createNewTodoList(data);
+        createTodoListMutation.mutate(data);
     };
 
+    const handleDeleteTodoList = (todoListId: string) => {
+        deleteTodoListMutation.mutate(todoListId);
+    };
     return (
         <>
             <Head>
@@ -35,14 +60,22 @@ export default function Home() {
                 <link rel="icon" href="/amcef_fav.webp" />
             </Head>
             <main className="w-screen h-screen bg-black">
-                <Modal id="modal1" label="Open ToDo Item Modal">
+                {isLoading && <div>Loading...</div>}
+                {isError && <div>Error occured</div>}
+                {data && (
+                    <TodoListStack
+                        todoLists={data}
+                        onDeleteList={handleDeleteTodoList}
+                    />
+                )}
+                {/* <Modal id="modal1" label="Open ToDo Item Modal">
                     <TodoItemForm
                         formTitle="New Todo Item"
                         inputPlaceholder="Type title..."
                         descriptionPlaceholder="Type description..."
                         onSubmit={onTodoItemFormSubmit}
                     />
-                </Modal>
+                </Modal> */}
                 <Modal id="modal2" label="Open ToDo List Modal">
                     <TodoListForm
                         formTitle="New Todo List"
