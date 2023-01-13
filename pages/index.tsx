@@ -59,7 +59,7 @@ export default function Home() {
                 />
                 <link rel="icon" href="/amcef_fav.webp" />
             </Head>
-            <main className="w-screen h-screen bg-black">
+            <div className="w-screen h-screen bg-black">
                 {isLoading && <div>Loading...</div>}
                 {isError && <div>Error occured</div>}
                 {data && (
@@ -83,7 +83,7 @@ export default function Home() {
                         onSubmit={onTodoListFormSubmit}
                     />
                 </Modal>
-            </main>
+            </div>
         </>
     );
 }

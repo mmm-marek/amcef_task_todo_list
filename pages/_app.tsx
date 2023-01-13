@@ -1,4 +1,5 @@
 import React from "react";
+import { Inter } from "@next/font/google";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
@@ -6,12 +7,16 @@ import type { AppProps } from "next/app";
 
 import "../styles/globals.css";
 
+const inter = Inter({ subsets: ["latin"] });
+
 export default function App({ Component, pageProps }: AppProps) {
     const [queryClient] = React.useState(() => new QueryClient());
 
     return (
         <QueryClientProvider client={queryClient}>
-            <Component {...pageProps} />
+            <main className={inter.className}>
+                <Component {...pageProps} />
+            </main>
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     );
