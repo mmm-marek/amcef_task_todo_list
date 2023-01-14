@@ -5,6 +5,8 @@ import {
     useQueryClient,
     QueryClient,
     dehydrate,
+    useHydrate,
+    DehydratedState,
 } from "react-query";
 import {
     createNewTodoItem,
@@ -31,9 +33,12 @@ import { ParsedUrlQuery } from "querystring";
 
 type TodoListProps = {
     id: string;
+    dehydratedState: DehydratedState;
 };
 
-const TodoList = ({ id }: TodoListProps) => {
+const TodoList = ({ id, dehydratedState }: TodoListProps) => {
+    useHydrate(dehydratedState);
+
     const queryClient = useQueryClient();
 
     const [isModalOpened, setIsModalOpened] = useState(false);
@@ -185,8 +190,8 @@ interface TodoListServerSideProps extends ParsedUrlQuery {
     id: string;
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-    const { id } = ctx.params as TodoListServerSideProps;
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const { id } = context.params as TodoListServerSideProps;
 
     const queryClient = new QueryClient();
 
@@ -199,7 +204,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     return {
         props: {
-            dehydratedState: dehydrate(queryClient),
+            dehydratedState: dehydrate(queryClient, {
+                shouldDehydrateQuery: () => true,
+            }),
             id,
         },
     };
