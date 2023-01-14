@@ -26,7 +26,7 @@ export const TodoListStack = ({
                             e.stopPropagation();
                             onDeleteList(id);
                         }}
-                        src="./close.svg"
+                        src="/close.svg"
                         alt="close"
                         width={20}
                         height={20}
