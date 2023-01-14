@@ -69,7 +69,7 @@ export default function Home() {
                 />
                 <link rel="icon" href="/amcef_fav.webp" />
             </Head>
-            <div className="flex justify-center items-center flex-col gap-2 w-screen h-screen bg-black">
+            <div className="flex justify-center items-center flex-col gap-2 bg-black">
                 <div>
                     <Image
                         src="./amcef-logo.svg"

@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import type { AppProps } from "next/app";
 
 import "../styles/globals.css";
+import { Layout } from "../layout/Layout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,7 +16,9 @@ export default function App({ Component, pageProps }: AppProps) {
     return (
         <QueryClientProvider client={queryClient}>
             <main className={inter.className}>
-                <Component {...pageProps} />
+                <Layout>
+                    <Component {...pageProps} />
+                </Layout>
             </main>
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>

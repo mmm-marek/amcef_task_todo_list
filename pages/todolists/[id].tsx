@@ -25,10 +25,11 @@ import { isOverdue } from "../../utils/isOverdue";
 const TodoList = () => {
     const router = useRouter();
     const queryClient = useQueryClient();
-    const { id } = router.query;
 
     const [isModalOpened, setIsModalOpened] = useState(false);
     const [todoItems, setTodoItems] = useState([] as TodoItem[]);
+
+    const { id } = router.query;
 
     const listQuery = useQuery(["todo-list", id], () => getTodoList(id));
     const todoItemsQuery = useQuery({
@@ -135,7 +136,7 @@ const TodoList = () => {
     };
 
     return (
-        <div className="w-screen h-screen flex flex-col justify-start items-center">
+        <div className="flex flex-col justify-start items-center">
             <h1 className=" text-6xl">
                 <span>Don`t forget about: </span>
                 <span>{listQuery.data?.title || "Loading..."}</span>
