@@ -1,6 +1,6 @@
 import React from "react";
 import { Inter } from "@next/font/google";
-import { QueryClient, QueryClientProvider, Hydrate } from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 import type { AppProps } from "next/app";
@@ -15,13 +15,11 @@ export default function App({ Component, pageProps }: AppProps) {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <Hydrate state={pageProps.dehydratedState}>
-                <main className={inter.className}>
-                    <Layout>
-                        <Component {...pageProps} />
-                    </Layout>
-                </main>
-            </Hydrate>
+            <main className={inter.className}>
+                <Layout>
+                    <Component {...pageProps} />
+                </Layout>
+            </main>
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     );

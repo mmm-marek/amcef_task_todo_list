@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-    useMutation,
-    useQuery,
-    useQueryClient,
-    QueryClient,
-    dehydrate,
-} from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
     createNewTodoItem,
     getTodoItemsForTodoList,
@@ -30,20 +24,24 @@ import { GetServerSideProps } from "next";
 import { ParsedUrlQuery } from "querystring";
 
 type TodoListProps = {
-    id: string;
+    todoListId: string;
+    todoListTitle: string;
     initialTodoItems: TodoItem[];
 };
 
-const TodoList = ({ id, initialTodoItems }: TodoListProps) => {
+const TodoList = ({
+    todoListId,
+    todoListTitle,
+    initialTodoItems,
+}: TodoListProps) => {
     const queryClient = useQueryClient();
 
     const [isModalOpened, setIsModalOpened] = useState(false);
     const [todoItems, setTodoItems] = useState([] as TodoItem[]);
 
-    const listQuery = useQuery(["todo-list", id], () => getTodoList(id));
     const todoItemsQuery = useQuery({
-        queryKey: ["todo-list", id, "todo-items"],
-        queryFn: () => getTodoItemsForTodoList(id),
+        queryKey: ["todo-list", todoListId, "todo-items"],
+        queryFn: () => getTodoItemsForTodoList(todoListId),
         onSuccess: (data) => {
             setTodoItems(data);
         },
@@ -53,7 +51,7 @@ const TodoList = ({ id, initialTodoItems }: TodoListProps) => {
         mutationFn: createNewTodoItem,
         onSuccess: (newTodoItem) => {
             queryClient.setQueryData(
-                ["todo-list", id, "todo-items"],
+                ["todo-list", todoListId, "todo-items"],
                 [
                     ...(todoItemsQuery.data ? todoItemsQuery.data : []),
                     newTodoItem,
@@ -66,7 +64,7 @@ const TodoList = ({ id, initialTodoItems }: TodoListProps) => {
         mutationFn: updateTodoItem,
         onSuccess: (updatedTodoItem) => {
             queryClient.setQueryData(
-                ["todo-list", id, "todo-items"],
+                ["todo-list", todoListId, "todo-items"],
                 [
                     ...(todoItemsQuery.data ? todoItemsQuery.data : []).map(
                         (item) =>
@@ -83,7 +81,7 @@ const TodoList = ({ id, initialTodoItems }: TodoListProps) => {
         mutationFn: deleteTodoItem,
         onSuccess: (deletedTodoItem) => {
             queryClient.setQueryData(
-                ["todo-list", id, "todo-items"],
+                ["todo-list", todoListId, "todo-items"],
                 [
                     ...(todoItemsQuery.data ? todoItemsQuery.data : []).filter(
                         (item) => item.id !== deletedTodoItem.id
@@ -96,7 +94,7 @@ const TodoList = ({ id, initialTodoItems }: TodoListProps) => {
     const handleTodoItemFormSubmit = (data: TodoItemFormValues) => {
         createTodoItemMutation.mutate({
             itemData: { ...data, isFinished: false },
-            todoListId: id as string,
+            todoListId: todoListId,
         });
         setIsModalOpened(false);
     };
@@ -105,12 +103,12 @@ const TodoList = ({ id, initialTodoItems }: TodoListProps) => {
         updateItemMutation.mutate({
             newItemData: { ...todoItem, isFinished: true },
             todoItemId: todoItem.id,
-            todoListId: id as string,
+            todoListId: todoListId,
         });
     };
 
     const handleDeleteClick = (todoItemId: string) => {
-        deleteItemMutation.mutate({ todoItemId, todoListId: id as string });
+        deleteItemMutation.mutate({ todoItemId, todoListId: todoListId });
     };
 
     const handleFilterChange = (
@@ -151,7 +149,7 @@ const TodoList = ({ id, initialTodoItems }: TodoListProps) => {
         <div className="flex flex-col justify-start items-center">
             <h1 className=" text-6xl">
                 <span>Don`t forget about: </span>
-                <span>{listQuery.data?.title || "Loading..."}</span>
+                <span>{todoListTitle}</span>
             </h1>
             <FilterSection onChange={handleFilterChange} />
             <TodoItemsStack
@@ -189,20 +187,14 @@ interface TodoListServerSideProps extends ParsedUrlQuery {
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { id } = context.params as TodoListServerSideProps;
 
-    const queryClient = new QueryClient();
-
-    const responses = await Promise.all([
-        queryClient.fetchQuery(["todo-list", id], () => getTodoList(id)),
-        queryClient.fetchQuery(["todo-list", id, "todo-items"], () =>
-            getTodoItemsForTodoList(id)
-        ),
-    ]);
+    const todoList = await getTodoList(id);
+    const todoItems = await getTodoItemsForTodoList(id);
 
     return {
         props: {
-            dehydratedState: dehydrate(queryClient),
-            initialTodoItems: responses[1],
-            id,
+            todoListId: id,
+            todoListTitle: todoList.title,
+            initialTodoItems: todoItems,
         },
     };
 };
