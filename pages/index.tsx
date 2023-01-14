@@ -75,7 +75,7 @@ export default function Home() {
                         src="./amcef-logo.svg"
                         alt="logo"
                         width={295}
-                        height={100}
+                        height={102}
                     />
                 </div>
                 {isLoading && <div>Loading...</div>}
