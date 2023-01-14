@@ -13,7 +13,11 @@ module.exports = {
             "amcef-white": "#ffffff",
             "amcef-white-hover": "#bcf78d",
         },
-        extend: {},
+        extend: {
+            width: {
+                300: "80rem",
+            },
+        },
     },
     plugins: [require("daisyui")],
 };

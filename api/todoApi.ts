@@ -4,19 +4,11 @@ import { TodoItemFormValues } from "../components/forms/TodoItemForm.component";
 
 export type TodoList = { id: string; title: string };
 
+export type TodoItem = TodoItemFormValues & { isFinished: boolean; id: string };
+
 export const getTodoLists = async (): Promise<TodoList[]> => {
     const res = await axios.get(
         "https://63beeddd585bedcb36bae16d.mockapi.io/api/todo-lists"
-    );
-    return res.data;
-};
-
-export const createNewTodoList = async (
-    data: TodoListFormValues
-): Promise<TodoList> => {
-    const res = await axios.post(
-        "https://63beeddd585bedcb36bae16d.mockapi.io/api/todo-lists",
-        data
     );
     return res.data;
 };
@@ -35,28 +27,42 @@ export const getTodoList = async (todoListId: string): Promise<TodoList> => {
     return res.data;
 };
 
-export const getTodoItemsForTodoList = async (todoListId: string) => {
+export const getTodoItemsForTodoList = async (
+    todoListId: string
+): Promise<TodoItem[]> => {
     const res = await axios.get(
         `https://63beeddd585bedcb36bae16d.mockapi.io/api/todo-lists/${todoListId}/todo-items`
     );
-    return res;
+    return res.data;
 };
 
-type TodoItemApiType = TodoItemFormValues & { isFinished: boolean };
+export const createNewTodoList = async (
+    data: TodoListFormValues
+): Promise<TodoList> => {
+    const res = await axios.post(
+        "https://63beeddd585bedcb36bae16d.mockapi.io/api/todo-lists",
+        data
+    );
+    return res.data;
+};
+
+type NewTodoItemApiData = {
+    itemData: TodoItemFormValues & { isFinished: boolean };
+    todoListId: string;
+};
 
 export const createNewTodoItem = async (
-    itemData: TodoItemApiType,
-    todoListId: string
-) => {
+    data: NewTodoItemApiData
+): Promise<TodoItem> => {
     const res = await axios.post(
-        `https://63beeddd585bedcb36bae16d.mockapi.io/api/todo-lists/${todoListId}/todo-items`,
-        itemData
+        `https://63beeddd585bedcb36bae16d.mockapi.io/api/todo-lists/${data.todoListId}/todo-items`,
+        data.itemData
     );
-    return res;
+    return res.data;
 };
 
 export const updateTodoItem = async (
-    newItemData: TodoItemApiType,
+    newItemData: TodoItem,
     todoItemId: string,
     todoListId: string
 ) => {
