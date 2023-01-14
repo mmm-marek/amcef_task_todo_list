@@ -4,9 +4,15 @@ import { TodoItem } from "../../api/todoApi";
 
 type TodoItemsStackProps = {
     todoItems: TodoItem[];
+    onDoneClick: (todoItem: TodoItem) => void;
+    onDeleteClick: (todoItemId: string) => void;
 };
 
-export const TodoItemsStack = ({ todoItems }: TodoItemsStackProps) => {
+export const TodoItemsStack = ({
+    todoItems,
+    onDoneClick,
+    onDeleteClick,
+}: TodoItemsStackProps) => {
     const isOverdue = (todoItem: TodoItem): boolean => {
         const todoItemTime = new Date(todoItem.date).getTime();
         const currentTime = new Date().getTime();
@@ -50,6 +56,8 @@ export const TodoItemsStack = ({ todoItems }: TodoItemsStackProps) => {
                                 alt="close"
                                 width={20}
                                 height={20}
+                                className="cursor-pointer"
+                                onClick={() => onDeleteClick(todoItem.id)}
                             />
                         </div>
                         <div>{todoItem.description}</div>
@@ -58,7 +66,12 @@ export const TodoItemsStack = ({ todoItems }: TodoItemsStackProps) => {
                                 {getDateTimeString(new Date(todoItem.date))}
                             </span>
                             {!todoItem.isFinished && (
-                                <button className="btn">Done</button>
+                                <button
+                                    className="btn"
+                                    onClick={() => onDoneClick(todoItem)}
+                                >
+                                    Done
+                                </button>
                             )}
                         </div>
                     </div>

@@ -46,14 +46,10 @@ export const createNewTodoList = async (
     return res.data;
 };
 
-type NewTodoItemApiData = {
+export const createNewTodoItem = async (data: {
     itemData: TodoItemFormValues & { isFinished: boolean };
     todoListId: string;
-};
-
-export const createNewTodoItem = async (
-    data: NewTodoItemApiData
-): Promise<TodoItem> => {
+}): Promise<TodoItem> => {
     const res = await axios.post(
         `https://63beeddd585bedcb36bae16d.mockapi.io/api/todo-lists/${data.todoListId}/todo-items`,
         data.itemData
@@ -61,24 +57,24 @@ export const createNewTodoItem = async (
     return res.data;
 };
 
-export const updateTodoItem = async (
-    newItemData: TodoItem,
-    todoItemId: string,
-    todoListId: string
-) => {
+export const updateTodoItem = async (data: {
+    newItemData: TodoItem;
+    todoItemId: string;
+    todoListId: string;
+}): Promise<TodoItem> => {
     const res = await axios.put(
-        `https://63beeddd585bedcb36bae16d.mockapi.io/api/todo-lists/${todoListId}/todo-items/${todoItemId}`,
-        newItemData
+        `https://63beeddd585bedcb36bae16d.mockapi.io/api/todo-lists/${data.todoListId}/todo-items/${data.todoItemId}`,
+        data.newItemData
     );
-    return res;
+    return res.data;
 };
 
-export const deleteTodoItem = async (
-    todoItemId: string,
-    todoListId: string
-) => {
+export const deleteTodoItem = async (data: {
+    todoItemId: string;
+    todoListId: string;
+}): Promise<TodoItem> => {
     const res = await axios.delete(
-        `https://63beeddd585bedcb36bae16d.mockapi.io/api/todo-lists/${todoListId}/todo-items/${todoItemId}`
+        `https://63beeddd585bedcb36bae16d.mockapi.io/api/todo-lists/${data.todoListId}/todo-items/${data.todoItemId}`
     );
-    return res;
+    return res.data;
 };

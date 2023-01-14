@@ -5,6 +5,9 @@ import {
     createNewTodoItem,
     getTodoItemsForTodoList,
     getTodoList,
+    updateTodoItem,
+    deleteTodoItem,
+    TodoItem,
 } from "../../api/todoApi";
 
 import {
@@ -26,7 +29,7 @@ const TodoList = () => {
         getTodoItemsForTodoList(id)
     );
 
-    const createTodoItem = useMutation({
+    const createTodoItemMutation = useMutation({
         mutationFn: createNewTodoItem,
         onSuccess: (newTodoItem) => {
             queryClient.setQueryData(
@@ -39,12 +42,55 @@ const TodoList = () => {
         },
     });
 
+    const updateItemMutation = useMutation({
+        mutationFn: updateTodoItem,
+        onSuccess: (updatedTodoItem) => {
+            queryClient.setQueryData(
+                ["todo-list", id, "todo-items"],
+                [
+                    ...(todoItemsQuery.data ? todoItemsQuery.data : []).map(
+                        (item) =>
+                            item.id === updatedTodoItem.id
+                                ? updatedTodoItem
+                                : item
+                    ),
+                ]
+            );
+        },
+    });
+
+    const deleteItemMutation = useMutation({
+        mutationFn: deleteTodoItem,
+        onSuccess: (deletedTodoItem) => {
+            queryClient.setQueryData(
+                ["todo-list", id, "todo-items"],
+                [
+                    ...(todoItemsQuery.data ? todoItemsQuery.data : []).filter(
+                        (item) => item.id !== deletedTodoItem.id
+                    ),
+                ]
+            );
+        },
+    });
+
     const handleTodoItemFormSubmit = (data: TodoItemFormValues) => {
-        createTodoItem.mutate({
+        createTodoItemMutation.mutate({
             itemData: { ...data, isFinished: false },
             todoListId: id as string,
         });
         setIsModalOpened(false);
+    };
+
+    const handleDoneClick = (todoItem: TodoItem) => {
+        updateItemMutation.mutate({
+            newItemData: { ...todoItem, isFinished: true },
+            todoItemId: todoItem.id,
+            todoListId: id as string,
+        });
+    };
+
+    const handleDeleteClick = (todoItemId: string) => {
+        deleteItemMutation.mutate({ todoItemId, todoListId: id as string });
     };
 
     return (
@@ -53,7 +99,11 @@ const TodoList = () => {
                 <span>Don`t forget about: </span>
                 <span>{listQuery.data?.title || "Loading..."}</span>
             </h1>
-            <TodoItemsStack todoItems={todoItemsQuery.data || []} />
+            <TodoItemsStack
+                todoItems={todoItemsQuery.data || []}
+                onDeleteClick={handleDeleteClick}
+                onDoneClick={handleDoneClick}
+            />
             <button
                 className="btn bg-amcef-primary hover:bg-amcef-primary-hover text-amcef-black"
                 onClick={() => setIsModalOpened(true)}
