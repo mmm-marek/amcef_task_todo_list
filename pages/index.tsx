@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
@@ -18,6 +19,7 @@ import { TodoListStack } from "../components/stack/TodoListsStack.component";
 export default function Home() {
     const queryClient = useQueryClient();
     const { isLoading, isError, data } = useQuery("todoLists", getTodoLists);
+    const router = useRouter();
     const [isModalOpened, setIsModalOpened] = useState(false);
 
     const createTodoListMutation = useMutation({
@@ -49,6 +51,10 @@ export default function Home() {
     const handleDeleteTodoList = (todoListId: string) => {
         deleteTodoListMutation.mutate(todoListId);
     };
+
+    const handleListClick = (todoListId: string) => {
+        router.push(`./todolists/${todoListId}`);
+    };
     return (
         <>
             <Head>
@@ -79,23 +85,18 @@ export default function Home() {
                         <TodoListStack
                             todoLists={data}
                             onDeleteList={handleDeleteTodoList}
+                            onListClick={handleListClick}
                         />
                     )}
                 </div>
-                {/* <Modal id="modal1" label="Open ToDo Item Modal">
-                    <TodoItemForm
-                        formTitle="New Todo Item"
-                        inputPlaceholder="Type title..."
-                        descriptionPlaceholder="Type description..."
-                        onSubmit={onTodoItemFormSubmit}
-                    />
-                </Modal> */}
+
                 <button
                     className="btn bg-amcef-primary hover:bg-amcef-primary-hover text-amcef-black"
                     onClick={() => setIsModalOpened(true)}
                 >
                     Create New Todo List
                 </button>
+
                 <Modal
                     isOpen={isModalOpened}
                     onClose={() => {
