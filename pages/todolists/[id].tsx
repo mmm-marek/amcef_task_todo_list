@@ -1,6 +1,11 @@
-import { useRouter } from "next/router";
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+    useMutation,
+    useQuery,
+    useQueryClient,
+    QueryClient,
+    dehydrate,
+} from "react-query";
 import {
     createNewTodoItem,
     getTodoItemsForTodoList,
@@ -21,15 +26,18 @@ import {
     FilterSection,
 } from "../../components/filterSection/FilterSection.component";
 import { isOverdue } from "../../utils/isOverdue";
+import { GetServerSideProps } from "next";
+import { ParsedUrlQuery } from "querystring";
 
-const TodoList = () => {
-    const router = useRouter();
+type TodoListProps = {
+    id: string;
+};
+
+const TodoList = ({ id }: TodoListProps) => {
     const queryClient = useQueryClient();
 
     const [isModalOpened, setIsModalOpened] = useState(false);
     const [todoItems, setTodoItems] = useState([] as TodoItem[]);
-
-    const { id } = router.query;
 
     const listQuery = useQuery(["todo-list", id], () => getTodoList(id));
     const todoItemsQuery = useQuery({
@@ -108,6 +116,9 @@ const TodoList = () => {
         searchValue: string,
         filterRadioType: FilterRadioType
     ) => {
+        if (!todoItemsQuery.data) {
+            return;
+        }
         setTodoItems([
             ...todoItemsQuery.data.filter((todoItem) => {
                 if (!todoItem.title.includes(searchValue)) {
@@ -168,6 +179,30 @@ const TodoList = () => {
             </Modal>
         </div>
     );
+};
+
+interface TodoListServerSideProps extends ParsedUrlQuery {
+    id: string;
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+    const { id } = ctx.params as TodoListServerSideProps;
+
+    const queryClient = new QueryClient();
+
+    await Promise.all([
+        queryClient.fetchQuery(["todo-list", id], () => getTodoList(id)),
+        queryClient.fetchQuery(["todo-list", id, "todo-items"], () =>
+            getTodoItemsForTodoList(id)
+        ),
+    ]);
+
+    return {
+        props: {
+            dehydratedState: dehydrate(queryClient),
+            id,
+        },
+    };
 };
 
 export default TodoList;
