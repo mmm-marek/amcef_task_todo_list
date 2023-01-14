@@ -28,6 +28,13 @@ export const deleteTodoList = async (todoListId: string): Promise<TodoList> => {
     return res.data;
 };
 
+export const getTodoList = async (todoListId: string): Promise<TodoList> => {
+    const res = await axios.get(
+        `https://63beeddd585bedcb36bae16d.mockapi.io/api/todo-lists/${todoListId}`
+    );
+    return res.data;
+};
+
 export const getTodoItemsForTodoList = async (todoListId: string) => {
     const res = await axios.get(
         `https://63beeddd585bedcb36bae16d.mockapi.io/api/todo-lists/${todoListId}/todo-items`
