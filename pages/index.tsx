@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
     createNewTodoList,
@@ -17,6 +18,7 @@ import { TodoListStack } from "../components/stack/TodoListsStack.component";
 export default function Home() {
     const queryClient = useQueryClient();
     const { isLoading, isError, data } = useQuery("todoLists", getTodoLists);
+    const [isModalOpened, setIsModalOpened] = useState(false);
 
     const createTodoListMutation = useMutation({
         mutationFn: createNewTodoList,
@@ -41,6 +43,7 @@ export default function Home() {
 
     const onTodoListFormSubmit = (data: TodoListFormValues) => {
         createTodoListMutation.mutate(data);
+        setIsModalOpened(false);
     };
 
     const handleDeleteTodoList = (todoListId: string) => {
@@ -87,7 +90,18 @@ export default function Home() {
                         onSubmit={onTodoItemFormSubmit}
                     />
                 </Modal> */}
-                <Modal id="modal2" label="Create New ToDo List">
+                <button
+                    className="btn bg-amcef-primary hover:bg-amcef-primary-hover text-amcef-black"
+                    onClick={() => setIsModalOpened(true)}
+                >
+                    Create New Todo List
+                </button>
+                <Modal
+                    isOpen={isModalOpened}
+                    onClose={() => {
+                        setIsModalOpened(false);
+                    }}
+                >
                     <TodoListForm
                         formTitle="New Todo List"
                         inputPlaceholder="Type title..."
