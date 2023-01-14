@@ -5,7 +5,6 @@ import {
     useQueryClient,
     QueryClient,
     dehydrate,
-    useHydrate,
     DehydratedState,
 } from "react-query";
 import {
@@ -33,12 +32,9 @@ import { ParsedUrlQuery } from "querystring";
 
 type TodoListProps = {
     id: string;
-    dehydratedState: DehydratedState;
 };
 
-const TodoList = ({ id, dehydratedState }: TodoListProps) => {
-    useHydrate(dehydratedState);
-
+const TodoList = ({ id }: TodoListProps) => {
     const queryClient = useQueryClient();
 
     const [isModalOpened, setIsModalOpened] = useState(false);
@@ -49,7 +45,6 @@ const TodoList = ({ id, dehydratedState }: TodoListProps) => {
         queryKey: ["todo-list", id, "todo-items"],
         queryFn: () => getTodoItemsForTodoList(id),
         onSuccess: (data) => {
-            console.log("refresh");
             setTodoItems(data);
         },
     });
@@ -65,6 +60,9 @@ const TodoList = ({ id, dehydratedState }: TodoListProps) => {
             );
         },
     });
+
+    console.log("list-query", listQuery.isLoading);
+    console.log("todoitems", todoItemsQuery.isLoading);
 
     const updateItemMutation = useMutation({
         mutationFn: updateTodoItem,
@@ -204,9 +202,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return {
         props: {
-            dehydratedState: dehydrate(queryClient, {
-                shouldDehydrateQuery: () => true,
-            }),
+            dehydratedState: dehydrate(queryClient),
             id,
         },
     };
