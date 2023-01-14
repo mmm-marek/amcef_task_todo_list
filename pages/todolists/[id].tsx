@@ -16,6 +16,11 @@ import {
 } from "../../components/forms/TodoItemForm.component";
 import { Modal } from "../../components/common/Modal.component";
 import { TodoItemsStack } from "../../components/stack/TodoItemsStack.component";
+import {
+    FilterRadioType,
+    FilterSection,
+} from "../../components/filterSection/FilterSection.component";
+import { isOverdue } from "../../utils/isOverdue";
 
 const TodoList = () => {
     const router = useRouter();
@@ -23,12 +28,17 @@ const TodoList = () => {
     const { id } = router.query;
 
     const [isModalOpened, setIsModalOpened] = useState(false);
+    const [todoItems, setTodoItems] = useState([] as TodoItem[]);
 
     const listQuery = useQuery(["todo-list", id], () => getTodoList(id));
-    const todoItemsQuery = useQuery(["todo-list", id, "todo-items"], () =>
-        getTodoItemsForTodoList(id)
-    );
-
+    const todoItemsQuery = useQuery({
+        queryKey: ["todo-list", id, "todo-items"],
+        queryFn: () => getTodoItemsForTodoList(id),
+        onSuccess: (data) => {
+            console.log("refresh");
+            setTodoItems(data);
+        },
+    });
     const createTodoItemMutation = useMutation({
         mutationFn: createNewTodoItem,
         onSuccess: (newTodoItem) => {
@@ -93,14 +103,46 @@ const TodoList = () => {
         deleteItemMutation.mutate({ todoItemId, todoListId: id as string });
     };
 
+    const handleFilterChange = (
+        searchValue: string,
+        filterRadioType: FilterRadioType
+    ) => {
+        setTodoItems([
+            ...todoItemsQuery.data.filter((todoItem) => {
+                if (!todoItem.title.includes(searchValue)) {
+                    return false;
+                }
+                const isTodoOverdue = isOverdue(new Date(todoItem.date));
+
+                if (
+                    filterRadioType === "Active" &&
+                    (todoItem.isFinished || isTodoOverdue)
+                ) {
+                    return false;
+                }
+                if (filterRadioType === "Done" && !todoItem.isFinished) {
+                    return false;
+                }
+                if (
+                    filterRadioType === "Overdue" &&
+                    (!isTodoOverdue || todoItem.isFinished)
+                ) {
+                    return false;
+                }
+                return true;
+            }),
+        ]);
+    };
+
     return (
         <div className="w-screen h-screen flex flex-col justify-start items-center">
             <h1 className=" text-6xl">
                 <span>Don`t forget about: </span>
                 <span>{listQuery.data?.title || "Loading..."}</span>
             </h1>
+            <FilterSection onChange={handleFilterChange} />
             <TodoItemsStack
-                todoItems={todoItemsQuery.data || []}
+                todoItems={todoItems}
                 onDeleteClick={handleDeleteClick}
                 onDoneClick={handleDoneClick}
             />
