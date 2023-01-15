@@ -3,6 +3,7 @@ import * as z from "zod";
 import classNames from "classnames";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler } from "react-hook-form";
+import { useEffect } from "react";
 
 export type TodoListFormValues = {
     title: string;
@@ -26,10 +27,15 @@ export const TodoListForm = ({
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitSuccessful },
+        reset,
     } = useForm<TodoListFormValues>({
         resolver: zodResolver(formSchema),
     });
+
+    useEffect(() => {
+        reset();
+    }, [isSubmitSuccessful, reset]);
 
     return (
         <div className={classNames("transition-height")}>
