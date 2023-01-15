@@ -6,7 +6,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import type { AppProps } from "next/app";
 
 import "../styles/globals.css";
-import { Layout } from "../layout/Layout";
+import { Layout } from "../components/layout/Layout.component";
 
 const inter = Inter({ subsets: ["latin"] });
 
