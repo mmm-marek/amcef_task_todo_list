@@ -2,12 +2,12 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+
 import {
     createNewTodoList,
     deleteTodoList,
     getTodoLists,
 } from "../api/todoApi";
-
 import { Modal } from "../components/common/Modal.component";
 import {
     TodoListForm,
@@ -55,6 +55,7 @@ export default function Home() {
     const handleListClick = (todoListId: string) => {
         router.push(`./todolists/${todoListId}`);
     };
+
     return (
         <div className="flex h-full justify-start items-center flex-col gap-2 bg-black pt-10">
             <h1 className="font-bold text-6xl">Steps to get a job at</h1>

@@ -1,5 +1,8 @@
 import { useState } from "react";
+import { GetServerSideProps } from "next";
+import { ParsedUrlQuery } from "querystring";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+
 import {
     createNewTodoItem,
     getTodoItemsForTodoList,
@@ -8,7 +11,6 @@ import {
     deleteTodoItem,
     TodoItem,
 } from "../../api/todoApi";
-
 import {
     TodoItemForm,
     TodoItemFormValues,
@@ -20,8 +22,6 @@ import {
     FilterSection,
 } from "../../components/filterSection/FilterSection.component";
 import { isOverdue } from "../../utils/isOverdue";
-import { GetServerSideProps } from "next";
-import { ParsedUrlQuery } from "querystring";
 
 type TodoListProps = {
     todoListId: string;
@@ -57,6 +57,7 @@ const TodoList = ({
         },
         initialData: initialTodoItems,
     });
+
     const createTodoItemMutation = useMutation({
         mutationFn: createNewTodoItem,
         onSuccess: (newTodoItem) => {
