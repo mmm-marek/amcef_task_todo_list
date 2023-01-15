@@ -185,21 +185,23 @@ const TodoList = ({
     };
 
     return (
-        <div className="h-full pt-10 flex flex-col justify-start items-center">
+        <div className="h-full pt-10 flex flex-col justify-start items-center gap-5">
             <h1 className="text-6xl">
-                <span>Don`t forget about: </span>
-                <span>{todoListTitle}</span>
+                <span className="mr-2">Step:</span>
+                <span className="font-bold">{todoListTitle}</span>
             </h1>
             <FilterSection
                 onSearchChange={handleSearchChange}
                 onCategoryChange={handleCategoryChange}
                 selectedFilterCategory={selectedFilterCategory}
             />
-            <TodoItemsStack
-                todoItems={todoItems}
-                onDeleteClick={handleDeleteClick}
-                onDoneClick={handleDoneClick}
-            />
+            <div className="xl:h-110 overflow-y-auto">
+                <TodoItemsStack
+                    todoItems={todoItems}
+                    onDeleteClick={handleDeleteClick}
+                    onDoneClick={handleDoneClick}
+                />
+            </div>
             <button
                 className="btn bg-amcef-primary hover:bg-amcef-primary-hover text-amcef-black"
                 onClick={() => setIsModalOpened(true)}
@@ -213,7 +215,7 @@ const TodoList = ({
                 }}
             >
                 <TodoItemForm
-                    formTitle="Create new To Do item"
+                    formTitle="Create New ToDo Item"
                     descriptionPlaceholder="Type the description..."
                     inputPlaceholder="Type the title..."
                     onSubmit={handleTodoItemFormSubmit}

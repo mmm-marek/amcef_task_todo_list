@@ -14,17 +14,14 @@ export const TodoItemsStack = ({
     onDoneClick,
     onDeleteClick,
 }: TodoItemsStackProps) => {
-    // const isOverdue = (todoItem: TodoItem): boolean => {
-    //     const todoItemTime = new Date(todoItem.date).getTime();
-    //     const currentTime = new Date().getTime();
-    //     if (todoItemTime >= currentTime) {
-    //         return false;
-    //     }
-    //     return true;
-    // };
-
     const getDateTimeString = (date: Date): string => {
-        return `${date.toDateString()} ${date.getHours()}:${date.getMinutes()}`;
+        return date.toLocaleString("sk-SK", {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
     };
 
     const getTodoItemClassname = (todoItem: TodoItem): string => {
@@ -39,7 +36,7 @@ export const TodoItemsStack = ({
 
     return (
         <div>
-            <div className="flex flex-col xl:w-300 xl:grid xl:grid-cols-3 gap-5">
+            <div className="flex flex-col xl:w-full xl:grid xl:grid-cols-3 gap-5">
                 {todoItems.map((todoItem) => {
                     return (
                         <div
@@ -63,7 +60,7 @@ export const TodoItemsStack = ({
                                 />
                             </div>
                             <div>{todoItem.description}</div>
-                            <div className="flex justify-between items-center">
+                            <div className="flex justify-between items-end">
                                 <span>
                                     {getDateTimeString(new Date(todoItem.date))}
                                 </span>

@@ -20,14 +20,14 @@ export const Layout = ({ children }: LayoutProps) => {
                 />
                 <link rel="icon" href="/amcef_fav.webp" />
             </Head>
-            <div className="p-3 w-screen h-screen flex flex-col justify-between overflow-hidden">
+            <div className="p-3 xl:w-screen xl:h-screen flex flex-col justify-between overflow-hidden">
                 <div>
                     <Link href="/" className=" uppercase font-bold text-xl">
                         Home
                     </Link>
                 </div>
                 {children}
-                <div className="flex justify-end items-end">
+                <div className="flex justify-end items-end mt-3">
                     <span className="mr-2">Created by:</span>
                     <span className="font-bold"> Marek Matušica </span>
                 </div>

@@ -39,11 +39,11 @@ export const FilterSection = ({
         <div className="flex flex-col items-center">
             <input
                 type="text"
-                placeholder="Type title..."
-                className="input w-full max-w-xs input-bordered"
+                placeholder="Search for..."
+                className="input w-full max-w-xs input-bordered mb-5"
                 onChange={(e) => handleSearchChange(e)}
             />
-            <div className="flex gap-8 justify-center">
+            <div className="w-full grid grid-cols-2 lg:grid-cols-4">
                 <RadioInput
                     id="all"
                     label="All"

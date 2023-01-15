@@ -50,7 +50,7 @@ export const TodoListForm = ({
                     {...register("title")}
                     type="text"
                     placeholder={inputPlaceholder}
-                    className="input input-bordered w-full max-w-xs"
+                    className="input input-bordered"
                 />
                 <input type="submit" value="Save" />
             </form>

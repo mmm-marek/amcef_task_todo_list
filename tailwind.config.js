@@ -14,8 +14,8 @@ module.exports = {
             "amcef-white-hover": "#bcf78d",
         },
         extend: {
-            width: {
-                300: "80rem",
+            height: {
+                110: "28rem",
             },
         },
     },

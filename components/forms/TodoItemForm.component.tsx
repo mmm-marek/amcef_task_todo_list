@@ -56,7 +56,7 @@ export const TodoItemForm = ({
                     {...register("title")}
                     type="text"
                     placeholder={inputPlaceholder}
-                    className="input input-bordered w-full max-w-xs"
+                    className="input input-bordered"
                 />
                 {errors.description?.message && (
                     <p>{errors.description?.message}</p>
