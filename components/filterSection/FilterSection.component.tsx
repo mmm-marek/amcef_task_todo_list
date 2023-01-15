@@ -1,7 +1,17 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
+
 import { RadioInput } from "../common/RadioInput.component";
 
 export type FilterCategory = "All" | "Active" | "Done" | "Overdue";
+
+export const isFilterCategory = (value: string): value is FilterCategory => {
+    return (
+        value === "All" ||
+        value === "Active" ||
+        value === "Done" ||
+        value === "Overdue"
+    );
+};
 
 type FilterSectionProps = {
     onSearchChange: (searchValue: string) => void;
@@ -14,18 +24,6 @@ export const FilterSection = ({
     onCategoryChange,
     selectedFilterCategory,
 }: FilterSectionProps) => {
-    // const [searchValue, setSearchValue] = useState("");
-    // const [radioValue, setRadioValue] = useState("All" as FilterCategory);
-
-    const isFilterCategory = (value: string): value is FilterCategory => {
-        return (
-            value === "All" ||
-            value === "Active" ||
-            value === "Done" ||
-            value === "Overdue"
-        );
-    };
-
     const handleRadioChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (!isFilterCategory(e.target.value)) {
             return;
