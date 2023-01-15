@@ -74,14 +74,12 @@ export default function Home() {
                     />
                 )}
             </div>
-
             <button
                 className="btn bg-amcef-primary hover:bg-amcef-primary-hover text-amcef-black"
                 onClick={() => setIsModalOpened(true)}
             >
                 Create New Todo List
             </button>
-
             <Modal
                 isOpen={isModalOpened}
                 onClose={() => {
