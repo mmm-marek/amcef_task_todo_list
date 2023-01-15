@@ -13,7 +13,7 @@ import {
     TodoListForm,
     TodoListFormValues,
 } from "../components/forms/TodoListForm.component";
-import { TodoListStack } from "../components/stack/TodoListsStack.component";
+import { TodoListStack } from "../components/stacks/TodoListsStack.component";
 
 export default function Home() {
     const router = useRouter();

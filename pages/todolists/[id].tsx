@@ -14,7 +14,7 @@ import {
     TodoItemFormValues,
 } from "../../components/forms/TodoItemForm.component";
 import { Modal } from "../../components/common/Modal.component";
-import { TodoItemsStack } from "../../components/stack/TodoItemsStack.component";
+import { TodoItemsStack } from "../../components/stacks/TodoItemsStack.component";
 import {
     FilterCategory,
     FilterSection,
@@ -186,7 +186,7 @@ const TodoList = ({
 
     return (
         <div className="h-full pt-10 flex flex-col justify-start items-center gap-5">
-            <h1 className="text-6xl">
+            <h1 className="text-2xl  xl:text-6xl">
                 <span className="mr-2">Step:</span>
                 <span className="font-bold">{todoListTitle}</span>
             </h1>
@@ -195,7 +195,7 @@ const TodoList = ({
                 onCategoryChange={handleCategoryChange}
                 selectedFilterCategory={selectedFilterCategory}
             />
-            <div className="xl:h-110 overflow-y-auto">
+            <div className="xl:max-h-110 overflow-y-auto">
                 <TodoItemsStack
                     todoItems={todoItems}
                     onDeleteClick={handleDeleteClick}
