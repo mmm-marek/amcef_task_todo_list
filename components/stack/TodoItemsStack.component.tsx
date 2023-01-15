@@ -69,7 +69,7 @@ export const TodoItemsStack = ({
                                 </span>
                                 {!todoItem.isFinished && (
                                     <button
-                                        className="btn"
+                                        className="btn hover:bg-amcef-primary hover:text-amcef-black"
                                         onClick={() => onDoneClick(todoItem)}
                                     >
                                         Done

@@ -185,8 +185,8 @@ const TodoList = ({
     };
 
     return (
-        <div className="flex flex-col justify-start items-center">
-            <h1 className=" text-6xl">
+        <div className="h-full pt-10 flex flex-col justify-start items-center">
+            <h1 className="text-6xl">
                 <span>Don`t forget about: </span>
                 <span>{todoListTitle}</span>
             </h1>
@@ -230,6 +230,8 @@ interface TodoListServerSideProps extends ParsedUrlQuery {
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { id } = context.params as TodoListServerSideProps;
 
+    // This part should be implemented with react-query and hydration,
+    // however, Netlify does not support it.
     const todoList = await getTodoList(id);
     const todoItems = await getTodoItemsForTodoList(id);
 
