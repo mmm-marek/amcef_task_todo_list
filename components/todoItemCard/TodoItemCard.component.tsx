@@ -54,7 +54,7 @@ export const TodoItemCard = ({
                 />
             </div>
             <div>{data.description}</div>
-            <div className="flex justify-between items-end">
+            <div className="flex justify-between items-end gap-5">
                 <span>{getDateTimeString(new Date(data.date))}</span>
                 {!data.isFinished && (
                     <button
