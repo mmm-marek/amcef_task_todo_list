@@ -5,6 +5,7 @@ type RadioInputProps = {
     id: string;
     value: string;
     name: string;
+    checked: boolean;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -14,6 +15,7 @@ export const RadioInput = ({
     value,
     name,
     onChange,
+    checked,
 }: RadioInputProps) => {
     return (
         <div className="flex items-center">
@@ -27,6 +29,7 @@ export const RadioInput = ({
                 className="radio"
                 value={value}
                 onChange={(e) => onChange(e)}
+                checked={checked}
             />
         </div>
     );

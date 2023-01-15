@@ -5,9 +5,13 @@ export type FilterRadioType = "All" | "Active" | "Done" | "Overdue";
 
 type FilterSectionProps = {
     onChange: (searchValue: string, filterRadioType: FilterRadioType) => void;
+    selectedFilterRadio: FilterRadioType;
 };
 
-export const FilterSection = ({ onChange }: FilterSectionProps) => {
+export const FilterSection = ({
+    onChange,
+    selectedFilterRadio,
+}: FilterSectionProps) => {
     const [searchValue, setSearchValue] = useState("");
     const [radioValue, setRadioValue] = useState("All" as FilterRadioType);
 
@@ -47,6 +51,7 @@ export const FilterSection = ({ onChange }: FilterSectionProps) => {
                     label="All"
                     name="filter"
                     value="All"
+                    checked={selectedFilterRadio === "All"}
                     onChange={handleRadioChange}
                 />
                 <RadioInput
@@ -54,6 +59,7 @@ export const FilterSection = ({ onChange }: FilterSectionProps) => {
                     label="Active"
                     name="filter"
                     value="Active"
+                    checked={selectedFilterRadio === "Active"}
                     onChange={handleRadioChange}
                 />
                 <RadioInput
@@ -61,6 +67,7 @@ export const FilterSection = ({ onChange }: FilterSectionProps) => {
                     label="Done"
                     name="filter"
                     value="Done"
+                    checked={selectedFilterRadio === "Done"}
                     onChange={handleRadioChange}
                 />
                 <RadioInput
@@ -68,6 +75,7 @@ export const FilterSection = ({ onChange }: FilterSectionProps) => {
                     label="Overdue"
                     name="filter"
                     value="Overdue"
+                    checked={selectedFilterRadio === "Overdue"}
                     onChange={handleRadioChange}
                 />
             </div>

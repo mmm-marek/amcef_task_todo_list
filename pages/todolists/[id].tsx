@@ -37,6 +37,9 @@ const TodoList = ({
     const queryClient = useQueryClient();
 
     const [isModalOpened, setIsModalOpened] = useState(false);
+    const [selectedFilterCategory, setSelectedFilterCategory] = useState(
+        "All" as FilterRadioType
+    );
     const [todoItems, setTodoItems] = useState([] as TodoItem[]);
 
     const todoItemsQuery = useQuery({
@@ -115,6 +118,7 @@ const TodoList = ({
         searchValue: string,
         filterRadioType: FilterRadioType
     ) => {
+        setSelectedFilterCategory(filterRadioType);
         if (!todoItemsQuery.data) {
             return;
         }
@@ -151,7 +155,10 @@ const TodoList = ({
                 <span>Don`t forget about: </span>
                 <span>{todoListTitle}</span>
             </h1>
-            <FilterSection onChange={handleFilterChange} />
+            <FilterSection
+                onChange={handleFilterChange}
+                selectedFilterRadio={selectedFilterCategory}
+            />
             <TodoItemsStack
                 todoItems={todoItems}
                 onDeleteClick={handleDeleteClick}
