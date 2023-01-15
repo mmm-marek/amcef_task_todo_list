@@ -53,7 +53,9 @@ export const TodoItemCard = ({
                     onClick={() => onDeleteClick(data.id)}
                 />
             </div>
-            <div>{data.description}</div>
+            <div className="whitespace-pre-wrap break-words">
+                {data.description}
+            </div>
             <div className="flex justify-between items-end gap-5">
                 <span>{getDateTimeString(new Date(data.date))}</span>
                 {!data.isFinished && (
