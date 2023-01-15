@@ -1,21 +1,23 @@
 import { ChangeEvent, useState } from "react";
 import { RadioInput } from "../common/RadioInput.component";
 
-export type FilterRadioType = "All" | "Active" | "Done" | "Overdue";
+export type FilterCategory = "All" | "Active" | "Done" | "Overdue";
 
 type FilterSectionProps = {
-    onChange: (searchValue: string, filterRadioType: FilterRadioType) => void;
-    selectedFilterRadio: FilterRadioType;
+    onSearchChange: (searchValue: string) => void;
+    onCategoryChange: (category: FilterCategory) => void;
+    selectedFilterCategory: FilterCategory;
 };
 
 export const FilterSection = ({
-    onChange,
-    selectedFilterRadio,
+    onSearchChange,
+    onCategoryChange,
+    selectedFilterCategory,
 }: FilterSectionProps) => {
-    const [searchValue, setSearchValue] = useState("");
-    const [radioValue, setRadioValue] = useState("All" as FilterRadioType);
+    // const [searchValue, setSearchValue] = useState("");
+    // const [radioValue, setRadioValue] = useState("All" as FilterCategory);
 
-    const isFilterRadioType = (value: string): value is FilterRadioType => {
+    const isFilterCategory = (value: string): value is FilterCategory => {
         return (
             value === "All" ||
             value === "Active" ||
@@ -25,16 +27,14 @@ export const FilterSection = ({
     };
 
     const handleRadioChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (!isFilterRadioType(e.target.value)) {
+        if (!isFilterCategory(e.target.value)) {
             return;
         }
-        setRadioValue(e.target.value);
-        onChange(searchValue, e.target.value);
+        onCategoryChange(e.target.value);
     };
 
     const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setSearchValue(e.target.value);
-        onChange(e.target.value, radioValue);
+        onSearchChange(e.target.value);
     };
 
     return (
@@ -51,7 +51,7 @@ export const FilterSection = ({
                     label="All"
                     name="filter"
                     value="All"
-                    checked={selectedFilterRadio === "All"}
+                    checked={selectedFilterCategory === "All"}
                     onChange={handleRadioChange}
                 />
                 <RadioInput
@@ -59,7 +59,7 @@ export const FilterSection = ({
                     label="Active"
                     name="filter"
                     value="Active"
-                    checked={selectedFilterRadio === "Active"}
+                    checked={selectedFilterCategory === "Active"}
                     onChange={handleRadioChange}
                 />
                 <RadioInput
@@ -67,7 +67,7 @@ export const FilterSection = ({
                     label="Done"
                     name="filter"
                     value="Done"
-                    checked={selectedFilterRadio === "Done"}
+                    checked={selectedFilterCategory === "Done"}
                     onChange={handleRadioChange}
                 />
                 <RadioInput
@@ -75,7 +75,7 @@ export const FilterSection = ({
                     label="Overdue"
                     name="filter"
                     value="Overdue"
-                    checked={selectedFilterRadio === "Overdue"}
+                    checked={selectedFilterCategory === "Overdue"}
                     onChange={handleRadioChange}
                 />
             </div>

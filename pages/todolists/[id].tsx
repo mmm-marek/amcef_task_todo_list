@@ -16,7 +16,7 @@ import {
 import { Modal } from "../../components/common/Modal.component";
 import { TodoItemsStack } from "../../components/stack/TodoItemsStack.component";
 import {
-    FilterRadioType,
+    FilterCategory,
     FilterSection,
 } from "../../components/filterSection/FilterSection.component";
 import { isOverdue } from "../../utils/isOverdue";
@@ -36,17 +36,24 @@ const TodoList = ({
 }: TodoListProps) => {
     const queryClient = useQueryClient();
 
-    const [isModalOpened, setIsModalOpened] = useState(false);
-    const [selectedFilterCategory, setSelectedFilterCategory] = useState(
-        "All" as FilterRadioType
-    );
     const [todoItems, setTodoItems] = useState([] as TodoItem[]);
+    const [isModalOpened, setIsModalOpened] = useState(false);
+    const [searchValue, setSearchValue] = useState("");
+    const [selectedFilterCategory, setSelectedFilterCategory] = useState(
+        "All" as FilterCategory
+    );
 
     const todoItemsQuery = useQuery({
         queryKey: ["todo-list", todoListId, "todo-items"],
         queryFn: () => getTodoItemsForTodoList(todoListId),
         onSuccess: (data) => {
-            setTodoItems(data);
+            setTodoItems(
+                createFilteredTodoItems(
+                    data,
+                    searchValue,
+                    selectedFilterCategory
+                )
+            );
         },
         initialData: initialTodoItems,
     });
@@ -114,39 +121,67 @@ const TodoList = ({
         deleteItemMutation.mutate({ todoItemId, todoListId: todoListId });
     };
 
-    const handleFilterChange = (
+    const createFilteredTodoItems = (
+        todoItems: TodoItem[],
         searchValue: string,
-        filterRadioType: FilterRadioType
-    ) => {
-        setSelectedFilterCategory(filterRadioType);
+        filterCategory: FilterCategory
+    ): TodoItem[] => [
+        ...todoItems.filter((todoItem) => {
+            if (
+                !todoItem.title
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase())
+            ) {
+                return false;
+            }
+
+            const isTodoOverdue = isOverdue(new Date(todoItem.date));
+
+            if (
+                filterCategory === "Active" &&
+                (todoItem.isFinished || isTodoOverdue)
+            ) {
+                return false;
+            }
+            if (filterCategory === "Done" && !todoItem.isFinished) {
+                return false;
+            }
+            if (
+                filterCategory === "Overdue" &&
+                (!isTodoOverdue || todoItem.isFinished)
+            ) {
+                return false;
+            }
+            return true;
+        }),
+    ];
+
+    const handleSearchChange = (newSearchValue: string) => {
+        setSearchValue(newSearchValue);
         if (!todoItemsQuery.data) {
             return;
         }
-        setTodoItems([
-            ...todoItemsQuery.data.filter((todoItem) => {
-                if (!todoItem.title.includes(searchValue)) {
-                    return false;
-                }
-                const isTodoOverdue = isOverdue(new Date(todoItem.date));
+        setTodoItems(
+            createFilteredTodoItems(
+                todoItemsQuery.data,
+                newSearchValue,
+                selectedFilterCategory
+            )
+        );
+    };
 
-                if (
-                    filterRadioType === "Active" &&
-                    (todoItem.isFinished || isTodoOverdue)
-                ) {
-                    return false;
-                }
-                if (filterRadioType === "Done" && !todoItem.isFinished) {
-                    return false;
-                }
-                if (
-                    filterRadioType === "Overdue" &&
-                    (!isTodoOverdue || todoItem.isFinished)
-                ) {
-                    return false;
-                }
-                return true;
-            }),
-        ]);
+    const handleCategoryChange = (newFilterCategory: FilterCategory) => {
+        setSelectedFilterCategory(newFilterCategory);
+        if (!todoItemsQuery.data) {
+            return;
+        }
+        setTodoItems(
+            createFilteredTodoItems(
+                todoItemsQuery.data,
+                searchValue,
+                newFilterCategory
+            )
+        );
     };
 
     return (
@@ -156,8 +191,9 @@ const TodoList = ({
                 <span>{todoListTitle}</span>
             </h1>
             <FilterSection
-                onChange={handleFilterChange}
-                selectedFilterRadio={selectedFilterCategory}
+                onSearchChange={handleSearchChange}
+                onCategoryChange={handleCategoryChange}
+                selectedFilterCategory={selectedFilterCategory}
             />
             <TodoItemsStack
                 todoItems={todoItems}
